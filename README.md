@@ -10,6 +10,7 @@ Say you are creating a template that outputs a series of divs. You want divs to 
 		<div>Content 1</div>
 		<div>Content 2</div>
 	</div>
+
 	<div class="row">
 		<div>Content 3</div>
 		<div>Content 4</div>
@@ -20,10 +21,12 @@ For two rows like the above, the solution is simple:
 	<div class="row">
 	{exp:channel:entries channel="some_channel" limit="4"}
 		<div>Content {count}</div>
+
 	{if count == 2}
 	</div>
 	<div class="row">
 	{/if}
+
 	{/exp:channel:entries}
 	</div>
 
@@ -32,10 +35,12 @@ However, as soon as you make the total number of elements variable, you will nee
 	<div class="row">
 	{exp:channel:entries channel="some_channel"}
 		<div>Content {count}</div>
+
 	{if '{exp:surgeree:modulo numerator="{count}" denominator="2"}' == 1}
 	</div>
 	<div class="row">
 	{/if}
+
 	{/exp:channel:entries}
 	</div>
 
@@ -45,10 +50,12 @@ That code does not work. If you dig in, you'll find that the `{count}` variable 
 	<div class="row">
 	{exp:channel:entries channel="some_channel"}
 		<div>Content {count}</div>
+
 	{exp:ifify:surgeree method="modulo" numerator="{count}" denominator="2" truthy="1"}
 	</div>
 	<div class="row">
 	{/exp:ifify:surgeree}
+
 	{/exp:channel:entries}
 	</div>
 
