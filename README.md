@@ -30,7 +30,7 @@ For two rows like the above, the solution is simple:
 However, as soon as you make the total number of elements variable, you will need to modify it to output the closing and opening divs after every odd element. One way to implement this is to use a modulo plugin to check if `{count} mod 2` is 1.
 
 	<div class="row">
-	{exp:channel:entries channel="some_channel" limit="4"}
+	{exp:channel:entries channel="some_channel"}
 		<div>Content {count}</div>
 	{if '{exp:surgeree:modulo numerator="{count}" denominator="2"}' == 1}
 	</div>
@@ -43,7 +43,7 @@ That code does not work. If you dig in, you'll find that the `{count}` variable 
 
 
 	<div class="row">
-	{exp:channel:entries channel="some_channel" limit="4"}
+	{exp:channel:entries channel="some_channel"}
 		<div>Content {count}</div>
 	{exp:ifify:surgeree method="modulo" numerator="{count}" denominator="2" truthy="1"}
 	</div>
