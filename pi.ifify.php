@@ -11,7 +11,7 @@
  * @since		Version 2.0
  * @filesource
  */
- 
+
 // ------------------------------------------------------------------------
 
 /**
@@ -36,34 +36,97 @@ $plugin_info = array(
 
 class Ifify {
 
+	/**
+	 * Required member
+	 *
+	 * @var string
+	 */
 	public $return_data;
-    
+
+	/**
+	 * What values constitute truthy
+	 *
+	 * @var mixed
+	 */
+	protected $truthy;
+
+	/**
+	 * What method is being called
+	 *
+	 * @var string
+	 */
+	protected $method;
+
 	/**
 	 * Constructor
 	 */
-	public function __construct()
-	{
+	public function __construct() {
+
 		$this->EE =& get_instance();
+
+		// Parameters specific to ifify
+		$this->method = $this->EE->TMPL->fetch_param('method', '');
+		$this->truthy = $this->EE->TMPL->fetch_param('truthy', '');
+
 	}
-	
+
+	/**
+	 * We use this to call an arbitrary third party plugin.
+	 *
+	 * @param  strong $plugin Name of the plugin to call.
+	 * @param  array $args    Argument list (required param, usually empty)
+	 * @return string         Output if truthy, else empty string.
+	 */
+	public function __call($plugin, $args) {
+
+		// Call plugin.
+		$this->EE->TMPL->log_item("Calling third party plugin '$plugin'.");
+		$obj = new $plugin;
+
+		// If plugin works in constructor, look for it's return_data,
+		// else, call the method to get it's return value.
+		$return = (is_string($this->method)) ? $obj->{$this->method}() : $this->return_data;
+
+		// If the reported truthy value is matched,
+		// return contents of tag pair.
+		$this->EE->TMPL->log_item("Comparing plugin return value '$return' to truthy value '{$this->truthy}'");
+
+		if ($return == $this->truthy) {
+
+			$this->EE->TMPL->log_item('Evaluated true, returning tag pair contents.');
+
+			return $this->EE->TMPL->tagdata;
+
+		} else {
+
+			// Not truthy, so return empty.
+			$this->EE->TMPL->log_item('Evaluated false, returning nothing.');
+			return '';
+
+		}
+
+	}
+
 	// ----------------------------------------------------------------
-	
+	// Usage
+	// ----------------------------------------------------------------
+
 	/**
 	 * Plugin Usage
 	 */
-	public static function usage()
-	{
+	public static function usage() {
 		ob_start();
 ?>
-
- Since you did not provide instructions on the form, make sure to put plugin documentation here.
+	{exp:ifify:surgeree method="modulo" numerator="3" denominator="2" truthy="1"}
+		This content will only show if plugin yields a truthy value.
+	{/exp:ifify:surgeree}
 <?php
 		$buffer = ob_get_contents();
 		ob_end_clean();
 		return $buffer;
 	}
-}
 
+}
 
 /* End of file pi.ifify.php */
 /* Location: /system/expressionengine/third_party/ifify/pi.ifify.php */
