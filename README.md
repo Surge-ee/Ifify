@@ -65,7 +65,19 @@ This succesfully passes the value of `{count}` to the `Surgeree::modulo` method,
 
 	{exp:ifify:<plugin_name> [<plugin_parameters>] truthy="<truthy_value>" [method="<method_name>"]}
 
-- `<plugin_name>` This is simply the name of the plugin you wish to make a conditional out of.
-- `<plugin_parameters>` *(Optional)* These are the parameters you would normally supply if you were calling the plugin directly. In the example from the section above, they are the "numerator" and "denominator" parameters.
-- `truthy` Ifify will run the plugin method for you, but it needs to have a value to compare the plugin's output with to determine whether or not to display its contents. In other words, what would you put on the other side of the `==` if this were an `{if}` conditional.
-- `method` *(Optional)* If the plugin is normally called as `{exp:plugin:method}`, this would be the "method" part. Some plugins are called as `{exp:plugin}`, in which case you can omit the method parameter entirely.
+### `<plugin_name>`
+
+This is simply the name of the plugin you wish to make a conditional out of.
+
+### `<plugin_parameters>` *(Optional)*
+
+These are the parameters you would normally supply if you were calling the plugin directly. In the example from the section above, they are the "numerator" and "denominator" parameters.
+
+### `truthy`
+
+Ifify will run the plugin method for you, but it needs to have a value to compare the plugin's output with to determine whether or not to display its contents. In other words, what would you put on the other side of the `==` if this were an `{if}` conditional.
+
+### `method` *(Optional)*
+
+ If the plugin is normally called as `{exp:plugin:method}`, this would be the "method" part. Some plugins are called as `{exp:plugin}`, in which case you can omit the method parameter entirely.
+
