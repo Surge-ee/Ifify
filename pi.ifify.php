@@ -58,6 +58,30 @@ class Ifify {
 	protected $method;
 
 	/**
+	 * Values EE considers boolean true
+	 *
+	 * @var array
+	 */
+	protected $yesyValues = array(
+		'y',
+		'yes',
+		'true',
+		'1'
+	);
+
+	/**
+	 * Values EE considers boolean false
+	 *
+	 * @var array
+	 */
+	protected $noeyValues = array(
+		'n',
+		'no',
+		'false',
+		'0'
+	);
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -115,7 +139,18 @@ class Ifify {
 		// return contents of tag pair.
 		$this->EE->TMPL->log_item("Comparing plugin return value '$return' to truthy value '{$this->truthy}'");
 
-		if ($return == $this->truthy) {
+		$comparison = false;
+
+		// Check if the truthy value is an EE y/n interchangeable,
+		// compare based on that fuzzy logic if so. Do a direct relaxed
+		// comparison otherwise.
+		if ($this->is_yn_value($this->truthy)) {
+			$comparison = $this->compare_yn_values($return, $this->truthy);
+		} else {
+			$comparison = ($return == $this->truthy);
+		}
+
+		if ($comparison) {
 
 			$this->EE->TMPL->log_item('Evaluated true, returning tag pair contents.');
 
@@ -128,6 +163,36 @@ class Ifify {
 			return '';
 
 		}
+
+	}
+
+	/**
+	 * Checks if a value is like the EE y/n interchangeables
+	 * @param  string  $value Value to check
+	 * @return boolean        Is or isn't
+	 */
+	protected function is_yn_value($value) {
+
+		$ynValues = array_merge($this->yesyValues, $this->noeyValues);
+		return in_array($value, $ynValues);
+
+	}
+
+	/**
+	 * Compares EE y/n interchangeables
+	 * @param  string $val1 First value
+	 * @param  string $val2 Second value
+	 * @return bool         True if both are yesy or both are noey, else false.
+	 */
+	protected function compare_yn_values($val1, $val2) {
+
+		$val1Yesy = in_array($val1, $this->yesyValues);
+		$val1Noey = in_array($val1, $this->noeyValues);
+
+		$val2Yesy = in_array($val2, $this->yesyValues);
+		$val2Noey = in_array($val2, $this->noeyValues);
+
+		return ($val1Yesy && $val2Yesy) || ($val1Noey && $val2Noey);
 
 	}
 
