@@ -135,6 +135,9 @@ class Ifify {
 
 		}
 
+		// Make sure that parameters passed are parsed.
+		$this->parse_params();
+
 		// Call plugin.
 		$this->EE->TMPL->log_item("Calling third party plugin '$plugin'.");
 		$obj = new $plugin_class;
@@ -219,6 +222,88 @@ class Ifify {
 		$val2Noey = in_array($val2, $this->noeyValues);
 
 		return ($val1Yesy && $val2Yesy) || ($val1Noey && $val2Noey);
+
+	}
+
+	/**
+	 * Invokes the EE parser on a parameter's value.
+	 *
+	 * @param  string $param Value of the parameter to be parsed.
+	 * @return string        Parsed value.
+	 */
+	protected function parse_param($param) {
+
+		$TMPL2 = new EE_Template();
+		$TMPL2->start_microtime = $this->EE->TMPL->start_microtime;
+		$TMPL2->template        = $param;
+		$TMPL2->tag_data	    = array();
+		$TMPL2->var_single      = array();
+		$TMPL2->var_cond	    = array();
+		$TMPL2->var_pair	    = array();
+		$TMPL2->plugins         = $this->EE->TMPL->plugins;
+		$TMPL2->modules         = $this->EE->TMPL->modules;
+		$TMPL2->parse_tags();
+		$TMPL2->process_tags();
+
+		return $TMPL2->template;
+
+	}
+
+	/**
+	 * Iteratively parses all parameters in $this->EE->TMPL->tagparams.
+	 *
+	 * Operates on $this->EE->TMPL->tagparams directly.
+	 *
+	 * @return void
+	 */
+	protected function parse_params() {
+
+		$params = $this->remove_reserved_params($this->EE->TMPL->tagparams);
+
+		foreach ($params as &$value) {
+
+			$value = $this->parse_param($value);
+
+		}
+
+		foreach ($this->EE->TMPL->tagparams as $key => $value) {
+
+			if (array_key_exists($key, $params)) {
+
+				$this->EE->TMPL->tagparams[$key] = $params[$key];
+
+			}
+
+		}
+
+	}
+
+	/**
+	 * Copies a parameter array without params specific to Ifify.
+	 *
+	 * @param  array $params Parameters array.
+	 * @return array         Filtered parameters array.
+	 */
+	protected function remove_reserved_params($params) {
+
+		$reserved_params = array(
+			'method',
+			'truthy'
+		);
+
+		$new_params = array();
+
+		foreach ($params as $key => $value) {
+
+			if (!in_array($key, $reserved_params)) {
+
+				$new_params[$key] = $value;
+
+			}
+
+		}
+
+		return $new_params;
 
 	}
 
