@@ -141,7 +141,25 @@ class Ifify {
 
 		// If plugin works in constructor, look for it's return_data,
 		// else, call the method to get it's return value.
-		$return = (is_string($this->method) && $this->method !== '') ? $obj->{$this->method}() : $this->return_data;
+		if (is_string($this->method) && $this->method !== '') {
+
+			// Let's make sure the method actually exists.
+			if (method_exists($obj, $this->method)) {
+
+				$return = $obj->{$this->method}();
+
+			} else {
+
+				$this->EE->TMPL->log_item("WARNING: Method '{$this->method}' doesn't exist. Returning empty.");
+				return '';
+
+			}
+
+		} else {
+
+			$return =  $this->return_data;
+
+		}
 
 		// If the reported truthy value is matched,
 		// return contents of tag pair.
