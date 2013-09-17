@@ -79,9 +79,33 @@ class Ifify {
 	 */
 	public function __call($plugin, $args) {
 
+		// Translations of plugin variable
+		$plugin_class = ucfirst($plugin);
+		$plugin_path = PATH_THIRD."{$plugin}/pi.{$plugin}.php";
+
+		// Check if class is defined and load it if not.
+		if (!class_exists($plugin_class)) {
+
+			// Attempt to load the file if it exists.
+			if (file_exists($plugin_path)) {
+
+				require_once $plugin_path;
+
+			}
+
+			// Check one last time in case its a bad plugin file.
+			if (!class_exists($plugin_class)) {
+
+				$this->EE->TMPL->log_item("WARNING: Plugin '$plugin' is not defined. Returning false.");
+				return '';
+
+			}
+
+		}
+
 		// Call plugin.
 		$this->EE->TMPL->log_item("Calling third party plugin '$plugin'.");
-		$obj = new $plugin;
+		$obj = new $plugin_class;
 
 		// If plugin works in constructor, look for it's return_data,
 		// else, call the method to get it's return value.
