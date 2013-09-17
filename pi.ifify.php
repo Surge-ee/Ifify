@@ -26,7 +26,7 @@
 
 $plugin_info = array(
 	'pi_name'		=> 'Ifify',
-	'pi_version'	=> '0.1.0',
+	'pi_version'	=> '0.2.0',
 	'pi_author'		=> 'Digital Surgeons',
 	'pi_author_url'	=> 'http://www.digitalsurgeons.com',
 	'pi_description'=> 'Makes any plugin tag into an if statement.',
