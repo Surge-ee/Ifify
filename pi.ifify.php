@@ -128,7 +128,7 @@ class Ifify {
 			// Check one last time in case its a bad plugin file.
 			if (!class_exists($plugin_class)) {
 
-				$this->EE->TMPL->log_item("WARNING: Plugin '$plugin' is not defined. Returning false.");
+				$this->EE->TMPL->log_item("WARNING: Plugin '$plugin' is not defined. Returning empty.");
 				return '';
 
 			}
