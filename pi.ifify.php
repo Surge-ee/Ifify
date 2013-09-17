@@ -58,6 +58,13 @@ class Ifify {
 	protected $method;
 
 	/**
+	 * Whether or not to force strict comparison
+	 *
+	 * @var boolean
+	 */
+	protected $strict = false;
+
+	/**
 	 * Values EE considers boolean true
 	 *
 	 * @var array
@@ -91,6 +98,7 @@ class Ifify {
 		// Parameters specific to ifify
 		$this->method = $this->EE->TMPL->fetch_param('method', '');
 		$this->truthy = $this->EE->TMPL->fetch_param('truthy', '');
+		$this->strict = in_array($this->EE->TMPL->fetch_param('ifify_strict'), $this->yesyValues);
 
 	}
 
@@ -144,7 +152,7 @@ class Ifify {
 		// Check if the truthy value is an EE y/n interchangeable,
 		// compare based on that fuzzy logic if so. Do a direct relaxed
 		// comparison otherwise.
-		if ($this->is_yn_value($this->truthy)) {
+		if ($this->is_yn_value($this->truthy) && !$this->strict) {
 			$comparison = $this->compare_yn_values($return, $this->truthy);
 		} else {
 			$comparison = ($return == $this->truthy);
