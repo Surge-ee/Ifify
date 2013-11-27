@@ -151,6 +151,15 @@ class Ifify {
 
 				$return = $obj->{$this->method}();
 
+				// Something the plugin authors don't actually
+				// return a vlue, but just rely on $this->return_data.
+				// So let's check for that.
+				if ($return === null) {
+
+					$return = $obj->return_data;
+
+				}
+
 			} else {
 
 				$this->EE->TMPL->log_item("WARNING: Method '{$this->method}' doesn't exist. Returning empty.");
@@ -160,7 +169,7 @@ class Ifify {
 
 		} else {
 
-			$return =  $this->return_data;
+			$return =  $obj->return_data;
 
 		}
 
