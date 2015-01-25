@@ -26,7 +26,7 @@
 
 $plugin_info = array(
 	'pi_name'		=> 'Ifify',
-	'pi_version'	=> '0.2.1',
+	'pi_version'	=> '0.3.0',
 	'pi_author'		=> 'Digital Surgeons',
 	'pi_author_url'	=> 'http://www.digitalsurgeons.com',
 	'pi_description'=> 'Makes any plugin tag into an if statement.',
@@ -114,6 +114,7 @@ class Ifify {
 		// Translations of plugin variable
 		$plugin_class = ucfirst($plugin);
 		$plugin_path = PATH_THIRD."{$plugin}/pi.{$plugin}.php";
+		$module_path = PATH_THIRD."{$plugin}/mod.{$plugin}.php";
 
 		// Check if class is defined and load it if not.
 		if (!class_exists($plugin_class)) {
@@ -123,12 +124,16 @@ class Ifify {
 
 				require_once $plugin_path;
 
+			} elseif (file_exists($module_path)) {
+
+				require_once $module_path;
+
 			}
 
 			// Check one last time in case its a bad plugin file.
 			if (!class_exists($plugin_class)) {
 
-				$this->EE->TMPL->log_item("WARNING: Plugin '$plugin' is not defined. Returning empty.");
+				$this->EE->TMPL->log_item("WARNING: Plugin or module '$plugin' is not defined. Returning empty.");
 				return '';
 
 			}
@@ -139,7 +144,7 @@ class Ifify {
 		$this->parse_params();
 
 		// Call plugin.
-		$this->EE->TMPL->log_item("Calling third party plugin '$plugin'.");
+		$this->EE->TMPL->log_item("Calling third party plugin or module '$plugin'.");
 		$obj = new $plugin_class;
 
 		// If plugin works in constructor, look for it's return_data,
