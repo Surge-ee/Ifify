@@ -63,6 +63,8 @@ This succesfully passes the value of `{count}` to the `Surgeree::modulo` method,
 
 ## Usage
 
+**Note**: As of 0.3.0 this should work for module tags as well as plugins.
+
 	{exp:ifify:<plugin_name> [<plugin_parameters>] truthy="<truthy_value>" [method="<method_name>"]}
 
 ### `<plugin_name>`
