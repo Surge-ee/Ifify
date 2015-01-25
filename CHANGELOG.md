@@ -1,3 +1,7 @@
+## 0.3.0
+
+- Introduce ability to call module tags in addition to plugin tags.
+
 ## 0.2.1
 
 - Fix bug where ifify wouldn't look for ->return_data when plugins don't return a value properly.
